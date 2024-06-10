@@ -1,9 +1,13 @@
 package com.generation.FarmaSara.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +35,10 @@ public class ProdutoModel {
 	@Positive //não pode ser negativo
 	@NotNull(message = "Este campo é obrigatorio")
 	private float preco;
+	
+	@ManyToOne //muitos para 1
+	@JsonIgnoreProperties("produto")// indica que uma parte do JSON será ignorado, impede que um looping seja criado
+	private CategoriaModel categoria;
 
 	public Long getId() {
 		return id;
@@ -63,7 +71,16 @@ public class ProdutoModel {
 	public void setPreco(float preco) {
 		this.preco = preco;
 	}
-	
+
+	public CategoriaModel getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriaModel categoria) {
+		this.categoria = categoria;
+	}
+
+
 	
 	
 }

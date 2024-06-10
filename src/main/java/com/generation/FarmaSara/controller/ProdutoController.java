@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.FarmaSara.model.ProdutoModel;
+import com.generation.FarmaSara.repository.RepositoryCategoria;
 import com.generation.FarmaSara.repository.RepositoryProdutos;
 
 
@@ -37,8 +38,8 @@ public class ProdutoController {
 	@Autowired //injeção de dependencia
 	private RepositoryProdutos repositoryProdutos;
 	
-	//@Autowired
-	//private CategoriaRepository categoriaRepository;
+	@Autowired
+	private RepositoryCategoria repositoryCategoria;
 	
 	//Listar todos os produtos 
 	
@@ -75,17 +76,26 @@ public class ProdutoController {
 		@PostMapping //cria uma requisição
 		public ResponseEntity<ProdutoModel> post(@Valid @RequestBody ProdutoModel produto){
 		
-			return  ResponseEntity.status(HttpStatus.CREATED)
-					.body(repositoryProdutos.save(produto));
+			if(repositoryCategoria.existsById(produto.getCategoria().getId()))
+				//status(HttpStatus.CREATED: Vai informar em formato Http que foi criado a postagem
+				return ResponseEntity.status(HttpStatus.CREATED)//retorna que foi criado no botão
+						.body(repositoryProdutos.save(produto));//save : metodo da repository , que vai fazer um INSERT INTO , e mostrar , ou seja , ele salva o produto e retorna a mesmo , então nesse caso o ResponseEntity tem um corpo
+				
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Categoria não existe!", null);
 		}	
 		
 		@PutMapping //altera e atualiza
 		public ResponseEntity<ProdutoModel> put(@Valid @RequestBody ProdutoModel produto){
 			
-			return repositoryProdutos.findById(produto.getId())
-					.map(resposta -> ResponseEntity.status(HttpStatus.OK)
-					.body(repositoryProdutos.save(produto)))
-					.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+			if(repositoryProdutos.existsById(produto.getId())) {//verifica se o produto existe 
+				if(repositoryCategoria.existsById(produto.getCategoria().getId()))//verifica se a categoriatambém existe
+					return ResponseEntity.status(HttpStatus.OK)
+							.body(repositoryProdutos.save(produto));//salva
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Categoria não existe!", null);// caso eu queira cadastrar uma categora que não existe
+			}
+			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		
 		}
 		
 		//DELETAR Produto

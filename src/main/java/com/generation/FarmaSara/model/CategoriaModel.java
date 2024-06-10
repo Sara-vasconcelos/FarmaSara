@@ -33,43 +33,42 @@ public class CategoriaModel {
 	@NotBlank(message = "O atributo nome é obrigatório e não pode estar vazio")
 	@Size(min = 3, max = 300, message = "O campo nome precisa ter entre 3 e 50 caracteres")
 	private String descricao; //descrição categoria
-//	
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria", cascade = CascadeType.REMOVE)
-//    @JsonIgnoreProperties("categoria")
-//    private List<ProdutoModel> produto;
 
-	public Long getId() {
-		return id;
-	}
+@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties("categoria")
+    private List<ProdutoModel> produto;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+public Long getId() {
+	return id;
+}
 
-	public String getNome() {
-		return nome;
-	}
+public void setId(Long id) {
+	this.id = id;
+}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+public String getNome() {
+	return nome;
+}
 
-	public String getDescricao() {
-		return descricao;
-	}
+public void setNome(String nome) {
+	this.nome = nome;
+}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+public String getDescricao() {
+	return descricao;
+}
 
-	
-//	public List<ProdutoModel> getProduto() {
-//		return produto;
-//	}
-//
-//	public void setProduto(List<ProdutoModel> produto) {
-//		this.produto = produto;
-//	}
-	
+public void setDescricao(String descricao) {
+	this.descricao = descricao;
+}
+
+public List<ProdutoModel> getProduto() {
+	return produto;
+}
+
+public void setProduto(List<ProdutoModel> produto) {
+	this.produto = produto;
+}
+
 	
 }
